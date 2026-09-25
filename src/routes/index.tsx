@@ -1,6 +1,7 @@
 import { useMemo, useReducer, useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { Download, FileArchive } from 'lucide-react'
+import { AboutSection } from '#/components/AboutSection'
 import { CropDialog } from '#/components/CropDialog'
 import { CutPlanList } from '#/components/CutPlanList'
 import { PhotoStrip } from '#/components/PhotoStrip'
@@ -41,8 +42,9 @@ async function loadPhoto(file: File): Promise<Photo> {
   }
 }
 
-// Canvas + File APIs only: render purely on the client.
-export const Route = createFileRoute('/')({ ssr: false, component: App })
+// Server-rendered (and prerendered at build time) so crawlers get real content;
+// all Canvas/File work happens in event handlers and effects on the client.
+export const Route = createFileRoute('/')({ component: App })
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState)
@@ -116,7 +118,13 @@ function App() {
     <div className="bg-muted/40 min-h-screen">
       <header className="bg-background flex flex-wrap items-center justify-between gap-3 border-b px-6 py-3">
         <div className="flex items-center gap-3">
-          <img src="/logo.svg" alt="" className="size-10" />
+          <img
+            src="/logo.svg"
+            alt=""
+            width={40}
+            height={40}
+            className="size-10"
+          />
           <div>
             <h1 className="text-lg font-semibold">Instant Photo Sheet Maker</h1>
             <p className="text-muted-foreground text-xs">
@@ -149,72 +157,75 @@ function App() {
         </div>
       </header>
 
-      <div className="grid gap-6 p-6 lg:grid-cols-[300px_1fr]">
-        <aside className="bg-background h-fit space-y-6 rounded-lg border p-5">
-          <UploadDropzone
-            onFiles={(f) => void addFiles(f)}
-            busy={pendingBatches > 0}
-          />
-          {errors.length > 0 && (
-            <ul className="text-destructive space-y-1 text-xs">
-              {errors.map((e, i) => (
-                <li key={i}>{e}</li>
-              ))}
-            </ul>
-          )}
-          <SettingsPanel
-            settings={settings}
-            perSheet={perSheet}
-            onChange={(patch) => dispatch({ type: 'settings', patch })}
-            onReset={() => dispatch({ type: 'resetSettings' })}
-          />
-        </aside>
+      <main>
+        <div className="grid gap-6 p-6 lg:grid-cols-[300px_1fr]">
+          <aside className="bg-background h-fit space-y-6 rounded-lg border p-5">
+            <UploadDropzone
+              onFiles={(f) => void addFiles(f)}
+              busy={pendingBatches > 0}
+            />
+            {errors.length > 0 && (
+              <ul className="text-destructive space-y-1 text-xs">
+                {errors.map((e, i) => (
+                  <li key={i}>{e}</li>
+                ))}
+              </ul>
+            )}
+            <SettingsPanel
+              settings={settings}
+              perSheet={perSheet}
+              onChange={(patch) => dispatch({ type: 'settings', patch })}
+              onReset={() => dispatch({ type: 'resetSettings' })}
+            />
+          </aside>
 
-        <main className="min-w-0 space-y-6">
-          <PhotoStrip
-            photos={photos}
-            onMove={(from, to) => dispatch({ type: 'move', from, to })}
-            onRemove={removePhoto}
-            onEdit={setEditingId}
-          />
-          {photos.length === 0 && (
-            <p className="text-muted-foreground text-sm">
-              Add photos to fill the sheet. Click a photo on a sheet to adjust
-              its crop.
-            </p>
-          )}
-          {settings.showCutLayout && perSheet > 0 && (
-            <CutPlanList cells={geometry.slots.map((s) => s.cell)} />
-          )}
-          <div className="grid gap-6 xl:grid-cols-[repeat(2,minmax(0,1fr))]">
-            {sheets.map((sheetPhotos, i) => (
-              <section key={i} className="min-w-0 space-y-2">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-sm font-medium">
-                    Sheet {i + 1} of {sheets.length}
-                  </h2>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    disabled={sheetPhotos.length === 0 || exporting}
-                    onClick={() => void download([i])}
-                  >
-                    <Download /> {sheetFileName(i, format)}
-                  </Button>
-                </div>
-                <SheetPreview
-                  geometry={geometry}
-                  photos={sheetPhotos}
-                  settings={settings}
-                  onSlotClick={(slot) =>
-                    setEditingId(sheetPhotos[slot]?.id ?? null)
-                  }
-                />
-              </section>
-            ))}
-          </div>
-        </main>
-      </div>
+          <section aria-label="Sheets" className="min-w-0 space-y-6">
+            <PhotoStrip
+              photos={photos}
+              onMove={(from, to) => dispatch({ type: 'move', from, to })}
+              onRemove={removePhoto}
+              onEdit={setEditingId}
+            />
+            {photos.length === 0 && (
+              <p className="text-muted-foreground text-sm">
+                Add photos to fill the sheet. Click a photo on a sheet to adjust
+                its crop. Your photos stay on your device.
+              </p>
+            )}
+            {settings.showCutLayout && perSheet > 0 && (
+              <CutPlanList cells={geometry.slots.map((s) => s.cell)} />
+            )}
+            <div className="grid gap-6 xl:grid-cols-[repeat(2,minmax(0,1fr))]">
+              {sheets.map((sheetPhotos, i) => (
+                <section key={i} className="min-w-0 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-sm font-medium">
+                      Sheet {i + 1} of {sheets.length}
+                    </h2>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={sheetPhotos.length === 0 || exporting}
+                      onClick={() => void download([i])}
+                    >
+                      <Download /> {sheetFileName(i, format)}
+                    </Button>
+                  </div>
+                  <SheetPreview
+                    geometry={geometry}
+                    photos={sheetPhotos}
+                    settings={settings}
+                    onSlotClick={(slot) =>
+                      setEditingId(sheetPhotos[slot]?.id ?? null)
+                    }
+                  />
+                </section>
+              ))}
+            </div>
+          </section>
+        </div>
+        <AboutSection />
+      </main>
 
       <CropDialog
         photo={editing}

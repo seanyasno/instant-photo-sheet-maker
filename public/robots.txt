@@ -1,0 +1,5 @@
+# Everyone (search engines and AI assistants) is welcome.
+User-agent: *
+Allow: /
+
+Sitemap: https://photosheet.seanyasno.com/sitemap.xml

@@ -1,0 +1,39 @@
+# Instant Photo Sheet Maker
+
+> Free, open-source web app that lays out photos as real-size instant-film prints (Instax Mini, Instax Square, Instax Wide, Polaroid Go, Polaroid i-Type/600) on a 4×6 in (152.4 × 101.6 mm) postcard sheet, exports at 300 DPI (1800 × 1200 px), and prints cut marks so the prints can be trimmed out. Designed for the Canon SELPHY CP1500 but works with any 4×6 photo printer. Runs entirely in the browser; photos are never uploaded.
+
+## Key facts
+
+- URL: https://photosheet.seanyasno.com/
+- Price: free, no account, no uploads (all processing is client-side with the Canvas API)
+- Input: JPEG, PNG, HEIC (EXIF orientation respected)
+- Output: JPEG (quality 0.95) or PNG at 300 DPI, one file per sheet, or a ZIP of all sheets
+- Sheet: 4×6 in, landscape or portrait, configurable gap (default 2 mm) and safe margin (default 2 mm)
+- Borders: white or black, with the thick "chin" border at the bottom like real instant film
+- Crop editor: pan, zoom and rotate each photo, locked to the film's aspect ratio
+- Cutting: printed cut marks plus a numbered guillotine cut plan with distances from the sheet edge
+
+## Print sizes (card / photo window, mm) and prints per 4×6 sheet
+
+- Instax Mini: 54 × 86 / 46 × 62, 2 per sheet
+- Instax Square: 72 × 86 / 62 × 62, 2 per sheet
+- Instax Wide (horizontal): 108 × 86 / 99 × 62, 1 per sheet
+- Instax Wide (vertical): 86 × 108 / 62 × 99, 1 per sheet
+- Polaroid Go: 53.9 × 66.6 / 47 × 46, 2 per sheet
+- Polaroid (i-Type / 600): 88 × 107 / 79 × 79, 1 per sheet
+
+## How to use
+
+1. Open https://photosheet.seanyasno.com/ and drop in photos.
+2. Choose a film format; photos fill the sheets in order, and extra sheets are added automatically.
+3. Click a print to adjust its crop.
+4. Download the sheets and print at 100% (actual size) on 4×6 paper.
+5. Cut along the marks: vertical cuts first, then horizontal.
+
+Note: Canon SELPHY borderless printing enlarges the image slightly to bleed off the edge; the safe margin keeps content away from the trimmed edges.
+
+## Links
+
+- App: https://photosheet.seanyasno.com/
+- Source code: https://github.com/seanyasno/instant-photo-sheet-maker
+- Author: Sean Yasno (https://seanyasno.com)

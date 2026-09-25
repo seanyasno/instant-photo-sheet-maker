@@ -9,6 +9,10 @@
 </p>
 
 <p align="center">
+  <a href="https://photosheet.seanyasno.com"><strong>photosheet.seanyasno.com</strong></a>
+</p>
+
+<p align="center">
   <img src="docs/screenshot.jpg" alt="Two 4×6 sheets with Instax Mini prints, white borders and cut marks" />
 </p>
 
@@ -64,7 +68,7 @@ pnpm dev        # http://localhost:3000
 | Command | What it does |
 | --- | --- |
 | `pnpm dev` | Start the dev server |
-| `pnpm build` | Production build |
+| `pnpm build` | Production build: prerendered static site in `dist/client` |
 | `pnpm test` | Unit tests (Vitest) |
 | `pnpm typecheck` | TypeScript, strict mode |
 | `pnpm lint` | ESLint |
@@ -101,6 +105,12 @@ src/
 All geometry is computed in millimetres by pure, unit-tested functions. Pixels only appear at render time
 (`px = mm / 25.4 × dpi`). The preview and the export call the same `renderSheet` function and differ only in scale
 and in a few screen-only overlays, such as the safe-margin outline and the cut layout.
+
+## Deployment
+
+`pnpm build` prerenders the page to static HTML in `dist/client` (plus `robots.txt`, `sitemap.xml`, `llms.txt`
+and icons from `public/`), so any static host works. The live site runs on **Cloudflare Pages**, connected to this
+repo, with build command `pnpm build` and output directory `dist/client`.
 
 ## Tech stack
 
