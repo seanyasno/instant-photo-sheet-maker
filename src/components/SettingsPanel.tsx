@@ -157,7 +157,7 @@ export function SettingsPanel({
         onChange={(orientation) => onChange({ orientation })}
       />
       <Choice
-        label="Border colour"
+        label="Border color"
         value={settings.borderColor}
         options={[
           { value: 'white', label: 'White' },

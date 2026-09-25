@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <img src="docs/screenshot.jpg" alt="Two 4×6 sheets with Instax Mini prints, black borders and cut marks" />
+  <img src="docs/screenshot.jpg" alt="Two 4×6 sheets with Instax Mini prints, white borders and cut marks" />
 </p>
 
 ## What it does
