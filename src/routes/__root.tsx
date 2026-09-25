@@ -9,6 +9,8 @@ import {
   SITE_URL,
 } from '#/config/site'
 
+import { THEME_INIT_SCRIPT } from '#/components/ThemeToggle'
+
 import appCss from '../styles.css?url'
 
 const jsonLd = {
@@ -94,6 +96,7 @@ export const Route = createRootRoute({
       { rel: 'manifest', href: '/site.webmanifest' },
     ],
     scripts: [
+      { children: THEME_INIT_SCRIPT },
       { type: 'application/ld+json', children: JSON.stringify(jsonLd) },
     ],
   }),
@@ -102,7 +105,8 @@ export const Route = createRootRoute({
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    // The theme init script may add class="dark" before hydration.
+    <html lang="en" suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>

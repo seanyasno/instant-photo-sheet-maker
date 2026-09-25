@@ -7,6 +7,7 @@ import { CutPlanList } from '#/components/CutPlanList'
 import { PhotoStrip } from '#/components/PhotoStrip'
 import { SettingsPanel } from '#/components/SettingsPanel'
 import { SheetPreview } from '#/components/SheetPreview'
+import { ThemeToggle } from '#/components/ThemeToggle'
 import { UploadDropzone } from '#/components/UploadDropzone'
 import { Button } from '#/components/ui/button'
 import {
@@ -133,6 +134,7 @@ function App() {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <ThemeToggle />
           <Select
             value={format}
             onValueChange={(v) => setFormat(v === 'png' ? 'png' : 'jpeg')}
